@@ -10,11 +10,11 @@ class vault::install {
             ensure => directory,
           }
         }
-        archive { "${::vault::download_dir}/${::vault::download_filename}":
+        archive { "${::vault::download_dir}/${::vault::real_download_filename}":
           ensure       => present,
           extract      => true,
           extract_path => $::vault::bin_dir,
-          source       => $::vault::download_url,
+          source       => $::vault::real_download_url,
           cleanup      => true,
           creates      => $vault_bin,
           before       => File[$vault_bin],

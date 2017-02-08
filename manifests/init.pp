@@ -57,7 +57,12 @@ class vault (
   $bin_dir             = $::vault::params::bin_dir,
   $config_dir          = $::vault::params::config_dir,
   $purge_config_dir    = true,
-  $download_url        = $::vault::params::download_url,
+  $version             = $::vault::params::version,
+  $arch                = $::vault::params::arch,
+  $os                  = $::vault::params::os,
+  $download_url        = undef,
+  $download_url_base   = $::vault::params::download_url_base,
+  $download_extension  = $::vault::params::download_extension,
   $service_name        = $::vault::params::service_name,
   $service_provider    = $::vault::params::service_provider,
   $backend             = $::vault::params::backend,
@@ -76,13 +81,16 @@ class vault (
   $package_ensure      = $::vault::params::package_ensure,
   $download_dir        = $::vault::params::download_dir,
   $manage_download_dir = $::vault::params::manage_download_dir,
-  $download_filename   = $::vault::params::download_filename,
+  $download_filename   = undef,
   $extra_config        = {},
 ) inherits ::vault::params {
 
   validate_hash($backend)
   validate_hash($listener)
   validate_hash($extra_config)
+
+  $real_download_url = pick($download_url, "${download_url_base}${version}/${package_name}_${version}_${os}_${arch}.${download_extension}")
+  $real_download_filename = pick($download_filename, "${package_name}_${version}_${os}_${arch}.${download_extension}")
 
   if $ha_backend {
     validate_hash($ha_backend)
